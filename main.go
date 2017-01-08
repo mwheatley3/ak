@@ -7,7 +7,6 @@ import (
 )
 
 func main() {
-	// fs := http.FileServer(http.Dir("public"))
 	fs := http.StripPrefix("/public/", http.FileServer(http.Dir("public")))
 	http.Handle("/public/", fs)
 	http.HandleFunc("/", react)

@@ -1,0 +1,22 @@
+html {
+    background: #fff;
+}
+
+.container-container {
+    > .container {
+        margin: 1em auto;
+    }
+}
+
+.button.is-primary {
+    background-color: #0E0E2C;
+    border-color: #fff;
+    border-width: 1;
+    color: #fff;
+
+    &:hover, &:focus, &.is-active {
+        background-color: #fff;
+        color: #0E0E2C;
+        border-color: #0E0E2C;
+    }
+}
