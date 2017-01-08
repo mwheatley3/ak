@@ -7,8 +7,11 @@ import (
 )
 
 func main() {
-	http.HandleFunc("/", hello)
-	http.HandleFunc("/react", react)
+	// fs := http.FileServer(http.Dir("public"))
+	fs := http.StripPrefix("/public/", http.FileServer(http.Dir("public")))
+	http.Handle("/public/", fs)
+	http.HandleFunc("/", react)
+	http.HandleFunc("/hello", hello)
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8081"
