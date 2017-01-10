@@ -6,7 +6,11 @@ export default class Home extends Component {
 
     render() {
         return (
-            <div>Home</div>
+          <div>
+              <div>Home</div>
+              <img src="http://s3.amazonaws.com/workingwheatleys/public/keri_desk.jpg"/>
+          </div>
+
         );
     }
 }

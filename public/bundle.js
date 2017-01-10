@@ -21538,12 +21538,7 @@
 	      return _react2.default.createElement(
 	        'div',
 	        null,
-	        this.props.children,
-	        _react2.default.createElement(
-	          'h1',
-	          null,
-	          'this is mey app'
-	        )
+	        this.props.children
 	      );
 	    }
 	  }]);
@@ -27210,11 +27205,6 @@
 	                            { className: 'nav-item', to: '/coffee' },
 	                            'Coffee'
 	                        )
-	                    ),
-	                    _react2.default.createElement(
-	                        'div',
-	                        { className: 'nav-right' },
-	                        'nav right'
 	                    )
 	                )
 	            );
@@ -27285,7 +27275,7 @@
 /* 254 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -27318,12 +27308,17 @@
 	    }
 
 	    _createClass(Home, [{
-	        key: 'render',
+	        key: "render",
 	        value: function render() {
 	            return _react2.default.createElement(
-	                'div',
+	                "div",
 	                null,
-	                'Home'
+	                _react2.default.createElement(
+	                    "div",
+	                    null,
+	                    "Home"
+	                ),
+	                _react2.default.createElement("img", { src: "http://s3.amazonaws.com/workingwheatleys/public/keri_desk.jpg" })
 	            );
 	        }
 	    }]);

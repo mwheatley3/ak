@@ -10,7 +10,6 @@ export default class App extends Component {
     return (
       <div>
         {this.props.children}
-        <h1>this is mey app</h1>
       </div>
   );
   }
