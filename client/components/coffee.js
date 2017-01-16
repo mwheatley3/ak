@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Form, { TextInput } from './common/form';
 
 export default class Coffee extends Component {
     static propTypes = {
@@ -6,7 +7,11 @@ export default class Coffee extends Component {
 
     render() {
         return (
-            <div>Coffee</div>
+            <div>Coffee
+              <Form>
+                twitter handle: <TextInput />
+              </Form>
+            </div>
         );
     }
 }

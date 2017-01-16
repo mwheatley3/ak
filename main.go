@@ -1,22 +1,43 @@
 package main
 
 import (
+	// "encoding/json"
 	"fmt"
+	"github.com/Sirupsen/logrus"
+	"github.com/mwheatley3/ak/server"
+	"github.com/mwheatley3/ak/server/twitter"
 	"net/http"
 	"os"
 )
 
 func main() {
+	s := server.Server{
+		HTTPServer: http.Server{},
+		Router:     http.NewServeMux(),
+	}
 	fs := http.StripPrefix("/public/", http.FileServer(http.Dir("public")))
-	http.Handle("/public/", fs)
-	http.HandleFunc("/", react)
-	http.HandleFunc("/hello", hello)
+	s.Router.Handle("/public/", fs)
+	s.Router.HandleFunc("/", react)
+	s.Router.HandleFunc("/hello", hello)
+	s.Router.HandleFunc("/tweet", s.WithTwitterClient(tweets))
+	// s.Router.HandleFunc("/access", twitterAccess)
+
+	twitterKey := os.Getenv("TWITTER_KEY")
+	twitterSecret := os.Getenv("TWITTER_SECRET")
+
+	l := logrus.New()
+	twitterClient := twitter.New(twitter.BaseURL, twitterKey, twitterSecret, l)
+
+	s.TwitterClient = twitterClient
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8081"
 	}
 	fmt.Println("listening... port" + port)
-	err := http.ListenAndServe(":"+port, nil)
+	s.HTTPServer.Addr = ":" + port
+	s.HTTPServer.Handler = s.Router
+	err := s.HTTPServer.ListenAndServe()
 	if err != nil {
 		panic(err)
 	}
@@ -29,4 +50,34 @@ func hello(res http.ResponseWriter, req *http.Request) {
 func react(res http.ResponseWriter, req *http.Request) {
 	println("react")
 	http.ServeFile(res, req, "./index.html")
+}
+
+func tweets(res http.ResponseWriter, req *http.Request) {
+	// is storing the twitter client on context correct?
+	twitterClient := req.Context().Value("twitterClient").(*twitter.Client)
+	if twitterClient.AccessToken == "" {
+		twitterClient.Access()
+	}
+	url := fmt.Sprintf("%s/statuses/user_timeline.json?screen_name=ItsFlo&count=2", twitterClient.BaseURL)
+
+	request, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		fmt.Printf(err.Error())
+	}
+
+	// var dest map[string]interface{}
+	var dest []twitter.Tweet
+	resp, err := twitterClient.Call(request, &dest)
+
+	fmt.Printf("dest%#+v\n", dest)
+	if err != nil {
+		fmt.Printf(err.Error())
+	}
+
+	println("inside twitter handler\n")
+	fmt.Printf("%#+v request context\n", req.Context().Value("twitterClient"))
+	fmt.Printf("resp %#+v\n", resp)
+
+	// twitterClient
+	twitter.Feed()
 }
