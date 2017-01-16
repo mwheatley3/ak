@@ -19,6 +19,7 @@ func main() {
 	s.Router.Handle("/public/", fs)
 	s.Router.HandleFunc("/", react)
 	s.Router.HandleFunc("/hello", hello)
+	s.Router.HandleFunc("/api/auth", auth)
 	s.Router.HandleFunc("/tweet", s.WithTwitterClient(tweets))
 	// s.Router.HandleFunc("/access", twitterAccess)
 
@@ -45,6 +46,11 @@ func main() {
 
 func hello(res http.ResponseWriter, req *http.Request) {
 	fmt.Fprintln(res, "hello, world")
+}
+
+func auth(res http.ResponseWriter, req *http.Request) {
+	fmt.Fprintln(res, "AUTH API")
+	println("***************************")
 }
 
 func react(res http.ResponseWriter, req *http.Request) {

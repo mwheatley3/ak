@@ -18,6 +18,7 @@ export default class Nav extends Component {
                 <div className="container">
                     <div className="nav-left">
                         <Link className="nav-item" to="/">nav left</Link>
+                        <Link className="nav-item" to="/login">Login</Link>
                         <Link className="nav-item" to="/coffee">Coffee</Link>
                     </div>
                 </div>
