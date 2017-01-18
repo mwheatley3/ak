@@ -36,16 +36,11 @@ func main() {
 	s.TwitterClient = twitterClient
 
 	database := os.Getenv("WW_DB")
-	slowThreshold := os.Getenv("WW_DB_SLOW_THRESHOLD")
-	if slowThreshold == "" {
-		slowThreshold = "40"
-	}
-	st, _ := strconv.Atoi(slowThreshold)
 	dbPort := os.Getenv("WW_DB_PORT")
 	if dbPort == "" {
 		dbPort = "5432"
 	}
-	dp, _ := strconv.Atoi(slowThreshold)
+	dp, _ := strconv.Atoi(dbPort)
 	dbHost := os.Getenv("WW_DB_HOST")
 	if dbHost == "" {
 		dbHost = "127.0.0.1"
@@ -56,10 +51,10 @@ func main() {
 		Port:     uint16(dp),
 		Database: database,
 		// Password:       "abc",
-		// User: "mwheatley",
-		// SslMode:        "prefer",
-		SlowThreshold: st,
-		// MaxConnections: 30,
+		User:           "mwheatley",
+		SslMode:        "prefer",
+		SlowThreshold:  40,
+		MaxConnections: 30,
 	})
 	err := db.Init()
 	if err != nil {
