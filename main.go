@@ -1,10 +1,14 @@
 package main
 
 import (
-	// "encoding/json"
 	"fmt"
 	"github.com/Sirupsen/logrus"
+	_ "github.com/jackc/pgx"
+	_ "github.com/jackc/pgx/stdlib"
 	"github.com/mwheatley3/ak/server"
+	"github.com/mwheatley3/ak/server/db"
+	"github.com/mwheatley3/ak/server/pg"
+	// "github.com/jmoiron/sqlx"
 	"github.com/mwheatley3/ak/server/twitter"
 	"net/http"
 	"os"
@@ -28,8 +32,28 @@ func main() {
 
 	l := logrus.New()
 	twitterClient := twitter.New(twitter.BaseURL, twitterKey, twitterSecret, l)
-
 	s.TwitterClient = twitterClient
+
+	db := db.NewFromConfig(l, pg.Config{
+		Host:           "127.0.0.1",
+		Port:           5432,
+		Database:       "workingwheatleys",
+		Password:       "abc",
+		User:           "mwheatley",
+		SslMode:        "prefer",
+		SlowThreshold:  40,
+		MaxConnections: 30,
+	})
+	err := db.Init()
+	if err != nil {
+		fmt.Printf(err.Error())
+	}
+
+	a, err := db.Test("")
+	if err != nil {
+		fmt.Printf(err.Error())
+	}
+	fmt.Printf("return from postgres%#+v\n", a)
 
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -38,7 +62,7 @@ func main() {
 	fmt.Println("listening... port" + port)
 	s.HTTPServer.Addr = ":" + port
 	s.HTTPServer.Handler = s.Router
-	err := s.HTTPServer.ListenAndServe()
+	err = s.HTTPServer.ListenAndServe()
 	if err != nil {
 		panic(err)
 	}
