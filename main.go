@@ -45,13 +45,18 @@ func main() {
 	if dbHost == "" {
 		dbHost = "127.0.0.1"
 	}
+	dbPass := os.Getenv("WW_DB_PASS")
+	dbUser := os.Getenv("WW_DB_USER")
+	if dbUser == "" {
+		dbUser = "mwheatley"
+	}
 
 	db := db.NewFromConfig(l, pg.Config{
-		Host:     dbHost,
-		Port:     uint16(dp),
-		Database: database,
-		// Password:       "abc",
-		User:           "mwheatley",
+		Host:           dbHost,
+		Port:           uint16(dp),
+		Database:       database,
+		Password:       dbPass,
+		User:           dbUser,
 		SslMode:        "prefer",
 		SlowThreshold:  40,
 		MaxConnections: 30,
