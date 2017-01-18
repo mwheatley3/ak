@@ -8,6 +8,7 @@ import (
 	"github.com/mwheatley3/ak/server"
 	"github.com/mwheatley3/ak/server/db"
 	"github.com/mwheatley3/ak/server/pg"
+	"strconv"
 	// "github.com/jmoiron/sqlx"
 	"github.com/mwheatley3/ak/server/twitter"
 	"net/http"
@@ -34,15 +35,31 @@ func main() {
 	twitterClient := twitter.New(twitter.BaseURL, twitterKey, twitterSecret, l)
 	s.TwitterClient = twitterClient
 
+	database := os.Getenv("WW_DB")
+	slowThreshold := os.Getenv("WW_DB_SLOW_THRESHOLD")
+	if slowThreshold == "" {
+		slowThreshold = "40"
+	}
+	st, _ := strconv.Atoi(slowThreshold)
+	dbPort := os.Getenv("WW_DB_PORT")
+	if dbPort == "" {
+		dbPort = "5432"
+	}
+	dp, _ := strconv.Atoi(slowThreshold)
+	dbHost := os.Getenv("WW_DB_HOST")
+	if dbHost == "" {
+		dbHost = "127.0.0.1"
+	}
+
 	db := db.NewFromConfig(l, pg.Config{
-		Host:           "127.0.0.1",
-		Port:           5432,
-		Database:       "workingwheatleys",
-		Password:       "abc",
-		User:           "mwheatley",
-		SslMode:        "prefer",
-		SlowThreshold:  40,
-		MaxConnections: 30,
+		Host:     dbHost,
+		Port:     uint16(dp),
+		Database: database,
+		// Password:       "abc",
+		// User: "mwheatley",
+		// SslMode:        "prefer",
+		SlowThreshold: st,
+		// MaxConnections: 30,
 	})
 	err := db.Init()
 	if err != nil {
