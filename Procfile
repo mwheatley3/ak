@@ -1,1 +1,1 @@
-web: ./server/wheat/wheat
+web: ak
