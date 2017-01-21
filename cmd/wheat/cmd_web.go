@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/Sirupsen/logrus"
+	// "github.com/Sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -11,10 +11,10 @@ func webCmd() *cobra.Command {
 		Use: "web",
 		Run: func(cmd *cobra.Command, args []string) {
 			var (
-				// 	c   = loadConfig()
-				l = logrus.New()
-				// 	db  = db.NewFromConfig(l, c.Postgres)
-				// srv = web.Server{}
+			// 	c   = loadConfig()
+			// l = logrus.New()
+			// 	db  = db.NewFromConfig(l, c.Postgres)
+			// srv = web.Server{}
 			)
 
 			// if err := srv.HTTPServer.ListenAndServe(); err != nil {
