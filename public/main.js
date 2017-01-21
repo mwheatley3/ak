@@ -34,7 +34,7 @@
 /******/ 	__webpack_require__.c = installedModules;
 
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
+/******/ 	__webpack_require__.p = "/public/";
 
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
@@ -56,15 +56,15 @@
 
 	var _routes2 = _interopRequireDefault(_routes);
 
-	var _store = __webpack_require__(279);
+	var _store = __webpack_require__(270);
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _api = __webpack_require__(280);
+	var _api = __webpack_require__(276);
 
 	var _api2 = _interopRequireDefault(_api);
 
-	var _context = __webpack_require__(276);
+	var _context = __webpack_require__(271);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -72,6 +72,7 @@
 
 	var api = new _api2.default();
 	var store = new _store2.default(api);
+	store.init();
 
 	var App = (0, _context.injector)({ store: store });
 
@@ -21540,7 +21541,7 @@
 
 	var _login2 = _interopRequireDefault(_login);
 
-	var _require_auth = __webpack_require__(278);
+	var _require_auth = __webpack_require__(269);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -28507,8 +28508,7 @@
 	exports.default = Notification;
 
 /***/ },
-/* 269 */,
-/* 270 */
+/* 269 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28516,19 +28516,21 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	exports.FetchError = undefined;
-	exports.urlEncode = urlEncode;
-	exports.pathString = pathString;
-	exports.handleResponse = handleResponse;
-	exports.get = get;
-	exports.post = post;
-	exports.del = del;
+	exports.RequireAuth = undefined;
 
-	__webpack_require__(271);
+	var _class, _class2, _temp;
 
-	var _bluebird = __webpack_require__(272);
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _bluebird2 = _interopRequireDefault(_bluebird);
+	exports.requireAuth = requireAuth;
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(179);
+
+	var _store = __webpack_require__(270);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -28538,598 +28540,449 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	function urlEncode(params) {
-	    var p = [];
+	var object = _react.PropTypes.object,
+	    node = _react.PropTypes.node;
+	function requireAuth(Comp) {
+	    var RequireAuthHOC = function (_Component) {
+	        _inherits(RequireAuthHOC, _Component);
 
-	    for (var k in params) {
-	        p.push(encodeURIComponent(k) + '=' + encodeURIComponent(params[k]));
-	    }
+	        function RequireAuthHOC() {
+	            _classCallCheck(this, RequireAuthHOC);
 
-	    return p.join('&');
-	}
-
-	function pathString(url, data) {
-	    data = urlEncode(data);
-
-	    if (!data) {
-	        return url;
-	    }
-
-	    return url + '?' + data;
-	}
-
-	function handleResponse(resp, body, Type) {
-	    if (resp.status >= 400) {
-	        var msg = body;
-	        var data = void 0;
-
-	        if (body && body.error) {
-	            msg = body.error.message;
-	            data = body.error.data;
+	            return _possibleConstructorReturn(this, (RequireAuthHOC.__proto__ || Object.getPrototypeOf(RequireAuthHOC)).apply(this, arguments));
 	        }
 
-	        throw new FetchError(resp.status, msg, data);
+	        _createClass(RequireAuthHOC, [{
+	            key: 'render',
+	            value: function render() {
+	                return _react2.default.createElement(
+	                    RequireAuth,
+	                    null,
+	                    _react2.default.createElement(Comp, this.props)
+	                );
+	            }
+	        }]);
+
+	        return RequireAuthHOC;
+	    }(_react.Component);
+
+	    return RequireAuthHOC;
+	}
+
+	var RequireAuth = exports.RequireAuth = (0, _reactRouter.withRouter)(_class = (0, _store.withStore)(_class = (_temp = _class2 = function (_Component2) {
+	    _inherits(RequireAuth, _Component2);
+
+	    function RequireAuth() {
+	        var _ref;
+
+	        _classCallCheck(this, RequireAuth);
+
+	        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	            args[_key] = arguments[_key];
+	        }
+
+	        var _this2 = _possibleConstructorReturn(this, (_ref = RequireAuth.__proto__ || Object.getPrototypeOf(RequireAuth)).call.apply(_ref, [this].concat(args)));
+
+	        _this2.state = {
+	            authed: false
+	        };
+	        return _this2;
 	    }
 
-	    return Type ? Type(body.data) : null;
-	}
+	    _createClass(RequireAuth, [{
+	        key: 'checkAuth',
+	        value: function checkAuth() {
+	            var _props = this.props,
+	                location = _props.location,
+	                router = _props.router,
+	                store = _props.store;
 
-	function call(_ref) {
-	    var url = _ref.url,
-	        _ref$options = _ref.options,
-	        options = _ref$options === undefined ? {} : _ref$options,
-	        Type = _ref.Type;
 
-	    if (!options.headers) {
-	        options.headers = {};
+	            if (!store.auth.user.loaded) {
+	                return;
+	            }
+
+	            if (store.auth.loggedIn) {
+	                this.setState({ authed: true });
+	            } else {
+	                var next = router.createPath({ pathname: location.pathname, query: location.query });
+	                router.push({ pathname: '/login', query: { next: next } });
+	            }
+	        }
+	    }, {
+	        key: 'componentWillMount',
+	        value: function componentWillMount() {
+	            this.checkAuth();
+	        }
+	    }, {
+	        key: 'componentWillUnmount',
+	        value: function componentWillUnmount() {
+	            this.checkAuth();
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            if (!this.state.authed) {
+	                return null;
+	            }
+
+	            return this.props.children;
+	        }
+	    }]);
+
+	    return RequireAuth;
+	}(_react.Component), _class2.propTypes = {
+	    location: object.isRequired,
+	    store: object.isRequired,
+	    router: object.isRequired,
+	    children: node.isRequired
+	}, _temp)) || _class) || _class;
+
+/***/ },
+/* 270 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = exports.withStore = undefined;
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _context = __webpack_require__(271);
+
+	var _value = __webpack_require__(272);
+
+	var _value2 = _interopRequireDefault(_value);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var withStore = exports.withStore = (0, _context.provider)('store');
+
+	var Store = function () {
+	    function Store(api) {
+	        _classCallCheck(this, Store);
+
+	        this._inited = false;
+
+	        this.auth = new AuthStore(api);
 	    }
 
-	    options.headers.Accept = 'application/json';
-	    options.credentials = 'same-origin';
+	    _createClass(Store, [{
+	        key: 'init',
+	        value: function init() {
+	            if (this._inited) {
+	                return;
+	            }
 
-	    return _bluebird2.default.resolve(fetch(url, options).then(function (resp) {
-	        return (resp.headers.get('Content-Type') === 'application/json' ? resp.json() : resp.text()).then(function (body) {
-	            return handleResponse(resp, body, Type);
-	        });
-	    }));
-	}
+	            this._inited = true;
+	            this.auth.init();
+	        }
+	    }]);
 
-	function get(_ref2) {
-	    var url = _ref2.url,
-	        _ref2$data = _ref2.data,
-	        data = _ref2$data === undefined ? {} : _ref2$data,
-	        _ref2$Type = _ref2.Type,
-	        Type = _ref2$Type === undefined ? null : _ref2$Type;
+	    return Store;
+	}();
 
-	    url = pathString(url, data);
+	// manage auth state
 
-	    return call({ url: url, Type: Type, options: {
-	            method: 'get'
-	        } });
-	}
 
-	function post(_ref3) {
-	    var url = _ref3.url,
-	        _ref3$data = _ref3.data,
-	        data = _ref3$data === undefined ? {} : _ref3$data,
-	        _ref3$Type = _ref3.Type,
-	        Type = _ref3$Type === undefined ? null : _ref3$Type;
+	exports.default = Store;
 
-	    return call({ url: url, Type: Type, options: {
-	            method: 'post',
-	            headers: {
-	                'Content-Type': 'application/json'
-	            },
-	            body: handleBody(data)
-	        } });
-	}
+	var AuthStore = function () {
+	    function AuthStore(api) {
+	        _classCallCheck(this, AuthStore);
 
-	function del(_ref4) {
-	    var url = _ref4.url,
-	        _ref4$data = _ref4.data,
-	        data = _ref4$data === undefined ? {} : _ref4$data,
-	        _ref4$Type = _ref4.Type,
-	        Type = _ref4$Type === undefined ? null : _ref4$Type;
+	        this.user = new _value2.default();
 
-	    return call({ url: url, Type: Type, options: {
-	            method: 'delete',
-	            headers: {
-	                'Content-Type': 'application/json'
-	            },
-	            body: handleBody(data)
-	        } });
-	}
-
-	function handleBody(data) {
-	    if (data instanceof Blob) {
-	        return data;
+	        this.api = api;
 	    }
 
-	    return JSON.stringify(data);
-	}
+	    _createClass(AuthStore, [{
+	        key: 'init',
+	        value: function init() {
+	            // see if we get a user, but if we get an error don't worry about it
+	            this.user.trackPromise(this.api.getUser().catch(function (err) {
+	                return void 0;
+	            }));
+	        }
+	    }, {
+	        key: 'login',
+	        value: function login(username, password) {
+	            this.user.trackPromise(this.api.login(username, password));
+	        }
+	    }, {
+	        key: 'logout',
+	        value: function logout() {
+	            this.user.setValue(null);
+	            this.api.logout().catch(function (err) {
+	                return console.err("logout error", err);
+	            });
+	        }
+	    }, {
+	        key: 'loggedIn',
+	        get: function get() {
+	            return !!this.user.value;
+	        }
+	    }]);
 
-	var FetchError = exports.FetchError = function (_Error) {
-	    _inherits(FetchError, _Error);
-
-	    function FetchError(code, message, data) {
-	        _classCallCheck(this, FetchError);
-
-	        var _this = _possibleConstructorReturn(this, (FetchError.__proto__ || Object.getPrototypeOf(FetchError)).call(this, message));
-
-	        _this.statusCode = code;
-	        _this.data = data;
-	        return _this;
-	    }
-
-	    return FetchError;
-	}(Error);
+	    return AuthStore;
+	}();
 
 /***/ },
 /* 271 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	(function(self) {
-	  'use strict';
+	'use strict';
 
-	  if (self.fetch) {
-	    return
-	  }
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
 
-	  var support = {
-	    searchParams: 'URLSearchParams' in self,
-	    iterable: 'Symbol' in self && 'iterator' in Symbol,
-	    blob: 'FileReader' in self && 'Blob' in self && (function() {
-	      try {
-	        new Blob()
-	        return true
-	      } catch(e) {
-	        return false
-	      }
-	    })(),
-	    formData: 'FormData' in self,
-	    arrayBuffer: 'ArrayBuffer' in self
-	  }
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	  if (support.arrayBuffer) {
-	    var viewClasses = [
-	      '[object Int8Array]',
-	      '[object Uint8Array]',
-	      '[object Uint8ClampedArray]',
-	      '[object Int16Array]',
-	      '[object Uint16Array]',
-	      '[object Int32Array]',
-	      '[object Uint32Array]',
-	      '[object Float32Array]',
-	      '[object Float64Array]'
-	    ]
+	exports.injector = injector;
+	exports.provider = provider;
 
-	    var isDataView = function(obj) {
-	      return obj && DataView.prototype.isPrototypeOf(obj)
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var any = _react.PropTypes.any,
+	    element = _react.PropTypes.element;
+	function injector(ctxt) {
+	    var _class, _temp;
+
+	    var ctxtTypes = {};
+
+	    for (var k in ctxt) {
+	        ctxtTypes[k] = any.isRequired;
 	    }
 
-	    var isArrayBufferView = ArrayBuffer.isView || function(obj) {
-	      return obj && viewClasses.indexOf(Object.prototype.toString.call(obj)) > -1
-	    }
-	  }
+	    return _temp = _class = function (_Component) {
+	        _inherits(ContextInjector, _Component);
 
-	  function normalizeName(name) {
-	    if (typeof name !== 'string') {
-	      name = String(name)
-	    }
-	    if (/[^a-z0-9\-#$%&'*+.\^_`|~]/i.test(name)) {
-	      throw new TypeError('Invalid character in header field name')
-	    }
-	    return name.toLowerCase()
-	  }
+	        function ContextInjector() {
+	            _classCallCheck(this, ContextInjector);
 
-	  function normalizeValue(value) {
-	    if (typeof value !== 'string') {
-	      value = String(value)
-	    }
-	    return value
-	  }
-
-	  // Build a destructive iterator for the value list
-	  function iteratorFor(items) {
-	    var iterator = {
-	      next: function() {
-	        var value = items.shift()
-	        return {done: value === undefined, value: value}
-	      }
-	    }
-
-	    if (support.iterable) {
-	      iterator[Symbol.iterator] = function() {
-	        return iterator
-	      }
-	    }
-
-	    return iterator
-	  }
-
-	  function Headers(headers) {
-	    this.map = {}
-
-	    if (headers instanceof Headers) {
-	      headers.forEach(function(value, name) {
-	        this.append(name, value)
-	      }, this)
-
-	    } else if (headers) {
-	      Object.getOwnPropertyNames(headers).forEach(function(name) {
-	        this.append(name, headers[name])
-	      }, this)
-	    }
-	  }
-
-	  Headers.prototype.append = function(name, value) {
-	    name = normalizeName(name)
-	    value = normalizeValue(value)
-	    var oldValue = this.map[name]
-	    this.map[name] = oldValue ? oldValue+','+value : value
-	  }
-
-	  Headers.prototype['delete'] = function(name) {
-	    delete this.map[normalizeName(name)]
-	  }
-
-	  Headers.prototype.get = function(name) {
-	    name = normalizeName(name)
-	    return this.has(name) ? this.map[name] : null
-	  }
-
-	  Headers.prototype.has = function(name) {
-	    return this.map.hasOwnProperty(normalizeName(name))
-	  }
-
-	  Headers.prototype.set = function(name, value) {
-	    this.map[normalizeName(name)] = normalizeValue(value)
-	  }
-
-	  Headers.prototype.forEach = function(callback, thisArg) {
-	    for (var name in this.map) {
-	      if (this.map.hasOwnProperty(name)) {
-	        callback.call(thisArg, this.map[name], name, this)
-	      }
-	    }
-	  }
-
-	  Headers.prototype.keys = function() {
-	    var items = []
-	    this.forEach(function(value, name) { items.push(name) })
-	    return iteratorFor(items)
-	  }
-
-	  Headers.prototype.values = function() {
-	    var items = []
-	    this.forEach(function(value) { items.push(value) })
-	    return iteratorFor(items)
-	  }
-
-	  Headers.prototype.entries = function() {
-	    var items = []
-	    this.forEach(function(value, name) { items.push([name, value]) })
-	    return iteratorFor(items)
-	  }
-
-	  if (support.iterable) {
-	    Headers.prototype[Symbol.iterator] = Headers.prototype.entries
-	  }
-
-	  function consumed(body) {
-	    if (body.bodyUsed) {
-	      return Promise.reject(new TypeError('Already read'))
-	    }
-	    body.bodyUsed = true
-	  }
-
-	  function fileReaderReady(reader) {
-	    return new Promise(function(resolve, reject) {
-	      reader.onload = function() {
-	        resolve(reader.result)
-	      }
-	      reader.onerror = function() {
-	        reject(reader.error)
-	      }
-	    })
-	  }
-
-	  function readBlobAsArrayBuffer(blob) {
-	    var reader = new FileReader()
-	    var promise = fileReaderReady(reader)
-	    reader.readAsArrayBuffer(blob)
-	    return promise
-	  }
-
-	  function readBlobAsText(blob) {
-	    var reader = new FileReader()
-	    var promise = fileReaderReady(reader)
-	    reader.readAsText(blob)
-	    return promise
-	  }
-
-	  function readArrayBufferAsText(buf) {
-	    var view = new Uint8Array(buf)
-	    var chars = new Array(view.length)
-
-	    for (var i = 0; i < view.length; i++) {
-	      chars[i] = String.fromCharCode(view[i])
-	    }
-	    return chars.join('')
-	  }
-
-	  function bufferClone(buf) {
-	    if (buf.slice) {
-	      return buf.slice(0)
-	    } else {
-	      var view = new Uint8Array(buf.byteLength)
-	      view.set(new Uint8Array(buf))
-	      return view.buffer
-	    }
-	  }
-
-	  function Body() {
-	    this.bodyUsed = false
-
-	    this._initBody = function(body) {
-	      this._bodyInit = body
-	      if (!body) {
-	        this._bodyText = ''
-	      } else if (typeof body === 'string') {
-	        this._bodyText = body
-	      } else if (support.blob && Blob.prototype.isPrototypeOf(body)) {
-	        this._bodyBlob = body
-	      } else if (support.formData && FormData.prototype.isPrototypeOf(body)) {
-	        this._bodyFormData = body
-	      } else if (support.searchParams && URLSearchParams.prototype.isPrototypeOf(body)) {
-	        this._bodyText = body.toString()
-	      } else if (support.arrayBuffer && support.blob && isDataView(body)) {
-	        this._bodyArrayBuffer = bufferClone(body.buffer)
-	        // IE 10-11 can't handle a DataView body.
-	        this._bodyInit = new Blob([this._bodyArrayBuffer])
-	      } else if (support.arrayBuffer && (ArrayBuffer.prototype.isPrototypeOf(body) || isArrayBufferView(body))) {
-	        this._bodyArrayBuffer = bufferClone(body)
-	      } else {
-	        throw new Error('unsupported BodyInit type')
-	      }
-
-	      if (!this.headers.get('content-type')) {
-	        if (typeof body === 'string') {
-	          this.headers.set('content-type', 'text/plain;charset=UTF-8')
-	        } else if (this._bodyBlob && this._bodyBlob.type) {
-	          this.headers.set('content-type', this._bodyBlob.type)
-	        } else if (support.searchParams && URLSearchParams.prototype.isPrototypeOf(body)) {
-	          this.headers.set('content-type', 'application/x-www-form-urlencoded;charset=UTF-8')
-	        }
-	      }
-	    }
-
-	    if (support.blob) {
-	      this.blob = function() {
-	        var rejected = consumed(this)
-	        if (rejected) {
-	          return rejected
+	            return _possibleConstructorReturn(this, (ContextInjector.__proto__ || Object.getPrototypeOf(ContextInjector)).apply(this, arguments));
 	        }
 
-	        if (this._bodyBlob) {
-	          return Promise.resolve(this._bodyBlob)
-	        } else if (this._bodyArrayBuffer) {
-	          return Promise.resolve(new Blob([this._bodyArrayBuffer]))
-	        } else if (this._bodyFormData) {
-	          throw new Error('could not read FormData body as blob')
-	        } else {
-	          return Promise.resolve(new Blob([this._bodyText]))
-	        }
-	      }
+	        _createClass(ContextInjector, [{
+	            key: 'getChildContext',
+	            value: function getChildContext() {
+	                return ctxt;
+	            }
+	        }, {
+	            key: 'render',
+	            value: function render() {
+	                return this.props.children;
+	            }
+	        }]);
 
-	      this.arrayBuffer = function() {
-	        if (this._bodyArrayBuffer) {
-	          return consumed(this) || Promise.resolve(this._bodyArrayBuffer)
-	        } else {
-	          return this.blob().then(readBlobAsArrayBuffer)
-	        }
-	      }
+	        return ContextInjector;
+	    }(_react.Component), _class.propTypes = {
+	        children: element.isRequired
+	    }, _class.childContextTypes = ctxtTypes, _temp;
+	}
+
+	// provider creates a function that can decorate react components to provide context
+	function provider() {
+	    for (var _len = arguments.length, keys = Array(_len), _key = 0; _key < _len; _key++) {
+	        keys[_key] = arguments[_key];
 	    }
 
-	    this.text = function() {
-	      var rejected = consumed(this)
-	      if (rejected) {
-	        return rejected
-	      }
+	    // transform inputs into an object that represents the context
+	    var ctxtTypes = keys.reduce(function (obj, k) {
+	        obj[k] = any.isRequired;
+	        return obj;
+	    }, {});
 
-	      if (this._bodyBlob) {
-	        return readBlobAsText(this._bodyBlob)
-	      } else if (this._bodyArrayBuffer) {
-	        return Promise.resolve(readArrayBufferAsText(this._bodyArrayBuffer))
-	      } else if (this._bodyFormData) {
-	        throw new Error('could not read FormData body as text')
-	      } else {
-	        return Promise.resolve(this._bodyText)
-	      }
-	    }
+	    return function (Comp) {
+	        var _class2, _temp2;
 
-	    if (support.formData) {
-	      this.formData = function() {
-	        return this.text().then(decode)
-	      }
-	    }
+	        var ContextProvider = (_temp2 = _class2 = function (_Component2) {
+	            _inherits(ContextProvider, _Component2);
 
-	    this.json = function() {
-	      return this.text().then(JSON.parse)
-	    }
+	            function ContextProvider() {
+	                _classCallCheck(this, ContextProvider);
 
-	    return this
-	  }
+	                return _possibleConstructorReturn(this, (ContextProvider.__proto__ || Object.getPrototypeOf(ContextProvider)).apply(this, arguments));
+	            }
 
-	  // HTTP methods whose capitalization should be normalized
-	  var methods = ['DELETE', 'GET', 'HEAD', 'OPTIONS', 'POST', 'PUT']
+	            _createClass(ContextProvider, [{
+	                key: 'render',
 
-	  function normalizeMethod(method) {
-	    var upcased = method.toUpperCase()
-	    return (methods.indexOf(upcased) > -1) ? upcased : method
-	  }
 
-	  function Request(input, options) {
-	    options = options || {}
-	    var body = options.body
+	                // combine context and props into props so that the context can be accessed via props
+	                value: function render() {
+	                    var props = Object.assign({}, this.props, this.context);
+	                    return _react2.default.createElement(Comp, props);
+	                }
+	                // use the default naming convention to place context on component
 
-	    if (typeof input === 'string') {
-	      this.url = input
-	    } else {
-	      if (input.bodyUsed) {
-	        throw new TypeError('Already read')
-	      }
-	      this.url = input.url
-	      this.credentials = input.credentials
-	      if (!options.headers) {
-	        this.headers = new Headers(input.headers)
-	      }
-	      this.method = input.method
-	      this.mode = input.mode
-	      if (!body && input._bodyInit != null) {
-	        body = input._bodyInit
-	        input.bodyUsed = true
-	      }
-	    }
+	            }]);
 
-	    this.credentials = options.credentials || this.credentials || 'omit'
-	    if (options.headers || !this.headers) {
-	      this.headers = new Headers(options.headers)
-	    }
-	    this.method = normalizeMethod(options.method || this.method || 'GET')
-	    this.mode = options.mode || this.mode || null
-	    this.referrer = null
+	            return ContextProvider;
+	        }(_react.Component), _class2.displayName = 'ContextProvider(' + (Comp.displayName || Comp.name) + ')', _class2.contextTypes = ctxtTypes, _temp2);
 
-	    if ((this.method === 'GET' || this.method === 'HEAD') && body) {
-	      throw new TypeError('Body not allowed for GET or HEAD requests')
-	    }
-	    this._initBody(body)
-	  }
+	        // hoist(ContextProvider, Comp);
 
-	  Request.prototype.clone = function() {
-	    return new Request(this, { body: this._bodyInit })
-	  }
-
-	  function decode(body) {
-	    var form = new FormData()
-	    body.trim().split('&').forEach(function(bytes) {
-	      if (bytes) {
-	        var split = bytes.split('=')
-	        var name = split.shift().replace(/\+/g, ' ')
-	        var value = split.join('=').replace(/\+/g, ' ')
-	        form.append(decodeURIComponent(name), decodeURIComponent(value))
-	      }
-	    })
-	    return form
-	  }
-
-	  function parseHeaders(rawHeaders) {
-	    var headers = new Headers()
-	    rawHeaders.split('\r\n').forEach(function(line) {
-	      var parts = line.split(':')
-	      var key = parts.shift().trim()
-	      if (key) {
-	        var value = parts.join(':').trim()
-	        headers.append(key, value)
-	      }
-	    })
-	    return headers
-	  }
-
-	  Body.call(Request.prototype)
-
-	  function Response(bodyInit, options) {
-	    if (!options) {
-	      options = {}
-	    }
-
-	    this.type = 'default'
-	    this.status = 'status' in options ? options.status : 200
-	    this.ok = this.status >= 200 && this.status < 300
-	    this.statusText = 'statusText' in options ? options.statusText : 'OK'
-	    this.headers = new Headers(options.headers)
-	    this.url = options.url || ''
-	    this._initBody(bodyInit)
-	  }
-
-	  Body.call(Response.prototype)
-
-	  Response.prototype.clone = function() {
-	    return new Response(this._bodyInit, {
-	      status: this.status,
-	      statusText: this.statusText,
-	      headers: new Headers(this.headers),
-	      url: this.url
-	    })
-	  }
-
-	  Response.error = function() {
-	    var response = new Response(null, {status: 0, statusText: ''})
-	    response.type = 'error'
-	    return response
-	  }
-
-	  var redirectStatuses = [301, 302, 303, 307, 308]
-
-	  Response.redirect = function(url, status) {
-	    if (redirectStatuses.indexOf(status) === -1) {
-	      throw new RangeError('Invalid status code')
-	    }
-
-	    return new Response(null, {status: status, headers: {location: url}})
-	  }
-
-	  self.Headers = Headers
-	  self.Request = Request
-	  self.Response = Response
-
-	  self.fetch = function(input, init) {
-	    return new Promise(function(resolve, reject) {
-	      var request = new Request(input, init)
-	      var xhr = new XMLHttpRequest()
-
-	      xhr.onload = function() {
-	        var options = {
-	          status: xhr.status,
-	          statusText: xhr.statusText,
-	          headers: parseHeaders(xhr.getAllResponseHeaders() || '')
-	        }
-	        options.url = 'responseURL' in xhr ? xhr.responseURL : options.headers.get('X-Request-URL')
-	        var body = 'response' in xhr ? xhr.response : xhr.responseText
-	        resolve(new Response(body, options))
-	      }
-
-	      xhr.onerror = function() {
-	        reject(new TypeError('Network request failed'))
-	      }
-
-	      xhr.ontimeout = function() {
-	        reject(new TypeError('Network request failed'))
-	      }
-
-	      xhr.open(request.method, request.url, true)
-
-	      if (request.credentials === 'include') {
-	        xhr.withCredentials = true
-	      }
-
-	      if ('responseType' in xhr && support.blob) {
-	        xhr.responseType = 'blob'
-	      }
-
-	      request.headers.forEach(function(value, name) {
-	        xhr.setRequestHeader(name, value)
-	      })
-
-	      xhr.send(typeof request._bodyInit === 'undefined' ? null : request._bodyInit)
-	    })
-	  }
-	  self.fetch.polyfill = true
-	})(typeof self !== 'undefined' ? self : this);
-
+	        return ContextProvider;
+	    };
+	}
 
 /***/ },
 /* 272 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = exports.ERROR = exports.SUCCESS = exports.LOADING = exports.EMPTY = undefined;
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _bluebird = __webpack_require__(273);
+
+	var _bluebird2 = _interopRequireDefault(_bluebird);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var EMPTY = exports.EMPTY = 'empty';
+	var LOADING = exports.LOADING = 'loading';
+	var SUCCESS = exports.SUCCESS = 'success';
+	var ERROR = exports.ERROR = 'error';
+
+	var Value = function () {
+	    function Value() {
+	        var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+	            value = _ref.value,
+	            error = _ref.error;
+
+	        _classCallCheck(this, Value);
+
+	        this.state = EMPTY;
+	        this.value = void 0;
+	        this.error = void 0;
+
+	        if (value) {
+	            this.setValue(value);
+	        } else if (error) {
+	            this.setError(error);
+	        }
+	    }
+
+	    _createClass(Value, [{
+	        key: 'setValue',
+	        value: function setValue(v) {
+	            this.value = v;
+	            this.error = void 0;
+	            this.state = SUCCESS;
+	        }
+	    }, {
+	        key: 'setError',
+	        value: function setError(err) {
+	            this.value = void 0;
+	            this.error = err;
+	            this.state = ERROR;
+	        }
+	    }, {
+	        key: 'trackPromise',
+	        value: function trackPromise(p) {
+	            var _this = this;
+
+	            this.state = LOADING;
+
+	            p.then(function (val) {
+	                return _this.setValue(val);
+	            }, function (err) {
+	                return _this.setError(err);
+	            });
+	        }
+	    }, {
+	        key: 'onValue',
+	        value: function onValue(fn) {
+	            var _this2 = this;
+
+	            var dispose = function dispose() {
+	                if (_this2.state === SUCCESS) {
+	                    fn(_this2.value);
+	                    dispose();
+	                    return;
+	                }
+	            };
+
+	            return this;
+	        }
+	    }, {
+	        key: 'asPromise',
+	        value: function asPromise() {
+	            var _this3 = this;
+
+	            return new _bluebird2.default(function (resolve, reject) {
+	                var dispose = function dispose() {
+	                    if (_this3.state === SUCCESS) {
+	                        resolve(_this3.value);
+	                        dispose();
+	                        return;
+	                    }
+
+	                    if (_this3.state === ERROR) {
+	                        reject(_this3.error);
+	                        dispose();
+	                        return;
+	                    }
+	                };
+	            });
+	        }
+	    }, {
+	        key: 'empty',
+	        get: function get() {
+	            return this.state === EMPTY;
+	        }
+	    }, {
+	        key: 'loaded',
+	        get: function get() {
+	            return this.state !== EMPTY && this.state !== LOADING;
+	        }
+	    }, {
+	        key: 'loading',
+	        get: function get() {
+	            return this.state === LOADING;
+	        }
+	    }], [{
+	        key: 'trackPromise',
+	        value: function trackPromise(p) {
+	            var v = new Value();
+	            v.trackPromise(p);
+
+	            return v;
+	        }
+	    }]);
+
+	    return Value;
+	}();
+
+	exports.default = Value;
+
+/***/ },
+/* 273 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process, global, setImmediate) {/* @preserve
@@ -34713,10 +34566,10 @@
 
 	},{"./es5":13}]},{},[4])(4)
 	});                    ;if (typeof window !== 'undefined' && window !== null) {                               window.P = window.Promise;                                                     } else if (typeof self !== 'undefined' && self !== null) {                             self.P = self.Promise;                                                         }
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), (function() { return this; }()), __webpack_require__(273).setImmediate))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), (function() { return this; }()), __webpack_require__(274).setImmediate))
 
 /***/ },
-/* 273 */
+/* 274 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var apply = Function.prototype.apply;
@@ -34769,13 +34622,13 @@
 	};
 
 	// setimmediate attaches itself to the global object
-	__webpack_require__(274);
+	__webpack_require__(275);
 	exports.setImmediate = setImmediate;
 	exports.clearImmediate = clearImmediate;
 
 
 /***/ },
-/* 274 */
+/* 275 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
@@ -34968,482 +34821,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(3)))
 
 /***/ },
-/* 275 */,
 /* 276 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	exports.injector = injector;
-	exports.provider = provider;
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var any = _react.PropTypes.any,
-	    element = _react.PropTypes.element;
-	function injector(ctxt) {
-	    var _class, _temp;
-
-	    var ctxtTypes = {};
-
-	    for (var k in ctxt) {
-	        ctxtTypes[k] = any.isRequired;
-	    }
-
-	    return _temp = _class = function (_Component) {
-	        _inherits(ContextInjector, _Component);
-
-	        function ContextInjector() {
-	            _classCallCheck(this, ContextInjector);
-
-	            return _possibleConstructorReturn(this, (ContextInjector.__proto__ || Object.getPrototypeOf(ContextInjector)).apply(this, arguments));
-	        }
-
-	        _createClass(ContextInjector, [{
-	            key: 'getChildContext',
-	            value: function getChildContext() {
-	                return ctxt;
-	            }
-	        }, {
-	            key: 'render',
-	            value: function render() {
-	                return this.props.children;
-	            }
-	        }]);
-
-	        return ContextInjector;
-	    }(_react.Component), _class.propTypes = {
-	        children: element.isRequired
-	    }, _class.childContextTypes = ctxtTypes, _temp;
-	}
-
-	// provider creates a function that can decorate react components to provide context
-	function provider() {
-	    for (var _len = arguments.length, keys = Array(_len), _key = 0; _key < _len; _key++) {
-	        keys[_key] = arguments[_key];
-	    }
-
-	    // transform inputs into an object that represents the context
-	    var ctxtTypes = keys.reduce(function (obj, k) {
-	        obj[k] = any.isRequired;
-	        return obj;
-	    }, {});
-
-	    return function (Comp) {
-	        var _class2, _temp2;
-
-	        var ContextProvider = (_temp2 = _class2 = function (_Component2) {
-	            _inherits(ContextProvider, _Component2);
-
-	            function ContextProvider() {
-	                _classCallCheck(this, ContextProvider);
-
-	                return _possibleConstructorReturn(this, (ContextProvider.__proto__ || Object.getPrototypeOf(ContextProvider)).apply(this, arguments));
-	            }
-
-	            _createClass(ContextProvider, [{
-	                key: 'render',
-
-
-	                // combine context and props into props so that the context can be accessed via props
-	                value: function render() {
-	                    var props = Object.assign({}, this.props, this.context);
-	                    return _react2.default.createElement(Comp, props);
-	                }
-	                // use the default naming convention to place context on component
-
-	            }]);
-
-	            return ContextProvider;
-	        }(_react.Component), _class2.displayName = 'ContextProvider(' + (Comp.displayName || Comp.name) + ')', _class2.contextTypes = ctxtTypes, _temp2);
-
-	        // hoist(ContextProvider, Comp);
-
-	        return ContextProvider;
-	    };
-	}
-
-/***/ },
-/* 277 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.default = exports.ERROR = exports.SUCCESS = exports.LOADING = exports.EMPTY = undefined;
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _bluebird = __webpack_require__(272);
-
-	var _bluebird2 = _interopRequireDefault(_bluebird);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var EMPTY = exports.EMPTY = 'empty';
-	var LOADING = exports.LOADING = 'loading';
-	var SUCCESS = exports.SUCCESS = 'success';
-	var ERROR = exports.ERROR = 'error';
-
-	var Value = function () {
-	    function Value() {
-	        var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-	            value = _ref.value,
-	            error = _ref.error;
-
-	        _classCallCheck(this, Value);
-
-	        this.state = EMPTY;
-	        this.value = void 0;
-	        this.error = void 0;
-
-	        if (value) {
-	            this.setValue(value);
-	        } else if (error) {
-	            this.setError(error);
-	        }
-	    }
-
-	    _createClass(Value, [{
-	        key: 'setValue',
-	        value: function setValue(v) {
-	            this.value = v;
-	            this.error = void 0;
-	            this.state = SUCCESS;
-	        }
-	    }, {
-	        key: 'setError',
-	        value: function setError(err) {
-	            this.value = void 0;
-	            this.error = err;
-	            this.state = ERROR;
-	        }
-	    }, {
-	        key: 'trackPromise',
-	        value: function trackPromise(p) {
-	            var _this = this;
-
-	            this.state = LOADING;
-
-	            p.then(function (val) {
-	                return _this.setValue(val);
-	            }, function (err) {
-	                return _this.setError(err);
-	            });
-	        }
-	    }, {
-	        key: 'onValue',
-	        value: function onValue(fn) {
-	            var _this2 = this;
-
-	            var dispose = function dispose() {
-	                if (_this2.state === SUCCESS) {
-	                    fn(_this2.value);
-	                    dispose();
-	                    return;
-	                }
-	            };
-
-	            return this;
-	        }
-	    }, {
-	        key: 'asPromise',
-	        value: function asPromise() {
-	            var _this3 = this;
-
-	            return new _bluebird2.default(function (resolve, reject) {
-	                var dispose = function dispose() {
-	                    if (_this3.state === SUCCESS) {
-	                        resolve(_this3.value);
-	                        dispose();
-	                        return;
-	                    }
-
-	                    if (_this3.state === ERROR) {
-	                        reject(_this3.error);
-	                        dispose();
-	                        return;
-	                    }
-	                };
-	            });
-	        }
-	    }, {
-	        key: 'empty',
-	        get: function get() {
-	            return this.state === EMPTY;
-	        }
-	    }, {
-	        key: 'loaded',
-	        get: function get() {
-	            return this.state !== EMPTY && this.state !== LOADING;
-	        }
-	    }, {
-	        key: 'loading',
-	        get: function get() {
-	            return this.state === LOADING;
-	        }
-	    }], [{
-	        key: 'trackPromise',
-	        value: function trackPromise(p) {
-	            var v = new Value();
-	            v.trackPromise(p);
-
-	            return v;
-	        }
-	    }]);
-
-	    return Value;
-	}();
-
-	exports.default = Value;
-
-/***/ },
-/* 278 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.RequireAuth = undefined;
-
-	var _class, _class2, _temp;
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	exports.requireAuth = requireAuth;
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRouter = __webpack_require__(179);
-
-	var _store = __webpack_require__(279);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var object = _react.PropTypes.object,
-	    node = _react.PropTypes.node;
-	function requireAuth(Comp) {
-	    var RequireAuthHOC = function (_Component) {
-	        _inherits(RequireAuthHOC, _Component);
-
-	        function RequireAuthHOC() {
-	            _classCallCheck(this, RequireAuthHOC);
-
-	            return _possibleConstructorReturn(this, (RequireAuthHOC.__proto__ || Object.getPrototypeOf(RequireAuthHOC)).apply(this, arguments));
-	        }
-
-	        _createClass(RequireAuthHOC, [{
-	            key: 'render',
-	            value: function render() {
-	                return _react2.default.createElement(
-	                    RequireAuth,
-	                    null,
-	                    _react2.default.createElement(Comp, this.props)
-	                );
-	            }
-	        }]);
-
-	        return RequireAuthHOC;
-	    }(_react.Component);
-
-	    return RequireAuthHOC;
-	}
-
-	var RequireAuth = exports.RequireAuth = (0, _reactRouter.withRouter)(_class = (0, _store.withStore)(_class = (_temp = _class2 = function (_Component2) {
-	    _inherits(RequireAuth, _Component2);
-
-	    function RequireAuth() {
-	        var _ref;
-
-	        _classCallCheck(this, RequireAuth);
-
-	        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-	            args[_key] = arguments[_key];
-	        }
-
-	        var _this2 = _possibleConstructorReturn(this, (_ref = RequireAuth.__proto__ || Object.getPrototypeOf(RequireAuth)).call.apply(_ref, [this].concat(args)));
-
-	        _this2.state = {
-	            authed: false
-	        };
-	        return _this2;
-	    }
-
-	    _createClass(RequireAuth, [{
-	        key: 'checkAuth',
-	        value: function checkAuth() {
-	            var _props = this.props,
-	                location = _props.location,
-	                router = _props.router,
-	                store = _props.store;
-
-
-	            if (!store.auth.user.loaded) {
-	                return;
-	            }
-
-	            if (store.auth.loggedIn) {
-	                this.setState({ authed: true });
-	            } else {
-	                var next = router.createPath({ pathname: location.pathname, query: location.query });
-	                router.push({ pathname: '/login', query: { next: next } });
-	            }
-	        }
-	    }, {
-	        key: 'componentWillMount',
-	        value: function componentWillMount() {
-	            this.checkAuth();
-	        }
-	    }, {
-	        key: 'componentWillUnmount',
-	        value: function componentWillUnmount() {
-	            this.checkAuth();
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            if (!this.state.authed) {
-	                return null;
-	            }
-
-	            return this.props.children;
-	        }
-	    }]);
-
-	    return RequireAuth;
-	}(_react.Component), _class2.propTypes = {
-	    location: object.isRequired,
-	    store: object.isRequired,
-	    router: object.isRequired,
-	    children: node.isRequired
-	}, _temp)) || _class) || _class;
-
-/***/ },
-/* 279 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.default = exports.withStore = undefined;
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _context = __webpack_require__(276);
-
-	var _value = __webpack_require__(277);
-
-	var _value2 = _interopRequireDefault(_value);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var withStore = exports.withStore = (0, _context.provider)('store');
-
-	var Store = function () {
-	    function Store(api) {
-	        _classCallCheck(this, Store);
-
-	        this._inited = false;
-
-	        this.auth = new AuthStore(api);
-	    }
-
-	    _createClass(Store, [{
-	        key: 'init',
-	        value: function init() {
-	            if (this._inited) {
-	                return;
-	            }
-
-	            this._inited = true;
-	            this.auth.init();
-	        }
-	    }]);
-
-	    return Store;
-	}();
-
-	// manage auth state
-
-
-	exports.default = Store;
-
-	var AuthStore = function () {
-	    function AuthStore(api) {
-	        _classCallCheck(this, AuthStore);
-
-	        this.user = new _value2.default();
-
-	        this.api = api;
-	    }
-
-	    _createClass(AuthStore, [{
-	        key: 'init',
-	        value: function init() {
-	            // see if we get a user, but if we get an error don't worry about it
-	            this.user.trackPromise(this.api.getUser().catch(function (err) {
-	                return void 0;
-	            }));
-	        }
-	    }, {
-	        key: 'login',
-	        value: function login(username, password) {
-	            this.user.trackPromise(this.api.login(username, password));
-	        }
-	    }, {
-	        key: 'logout',
-	        value: function logout() {
-	            this.user.setValue(null);
-	            this.api.logout().catch(function (err) {
-	                return console.err("logout error", err);
-	            });
-	        }
-	    }, {
-	        key: 'loggedIn',
-	        get: function get() {
-	            return !!this.user.value;
-	        }
-	    }]);
-
-	    return AuthStore;
-	}();
-
-/***/ },
-/* 280 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -35455,7 +34833,7 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _fetch = __webpack_require__(270);
+	var _fetch = __webpack_require__(277);
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -35504,6 +34882,627 @@
 	}();
 
 	exports.default = API;
+
+/***/ },
+/* 277 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.FetchError = undefined;
+	exports.urlEncode = urlEncode;
+	exports.pathString = pathString;
+	exports.handleResponse = handleResponse;
+	exports.get = get;
+	exports.post = post;
+	exports.del = del;
+
+	__webpack_require__(278);
+
+	var _bluebird = __webpack_require__(273);
+
+	var _bluebird2 = _interopRequireDefault(_bluebird);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function urlEncode(params) {
+	    var p = [];
+
+	    for (var k in params) {
+	        p.push(encodeURIComponent(k) + '=' + encodeURIComponent(params[k]));
+	    }
+
+	    return p.join('&');
+	}
+
+	function pathString(url, data) {
+	    data = urlEncode(data);
+
+	    if (!data) {
+	        return url;
+	    }
+
+	    return url + '?' + data;
+	}
+
+	function handleResponse(resp, body, Type) {
+	    if (resp.status >= 400) {
+	        var msg = body;
+	        var data = void 0;
+
+	        if (body && body.error) {
+	            msg = body.error.message;
+	            data = body.error.data;
+	        }
+
+	        throw new FetchError(resp.status, msg, data);
+	    }
+
+	    return Type ? Type(body.data) : null;
+	}
+
+	function call(_ref) {
+	    var url = _ref.url,
+	        _ref$options = _ref.options,
+	        options = _ref$options === undefined ? {} : _ref$options,
+	        Type = _ref.Type;
+
+	    if (!options.headers) {
+	        options.headers = {};
+	    }
+
+	    options.headers.Accept = 'application/json';
+	    options.credentials = 'same-origin';
+
+	    return _bluebird2.default.resolve(fetch(url, options).then(function (resp) {
+	        return (resp.headers.get('Content-Type') === 'application/json' ? resp.json() : resp.text()).then(function (body) {
+	            return handleResponse(resp, body, Type);
+	        });
+	    }));
+	}
+
+	function get(_ref2) {
+	    var url = _ref2.url,
+	        _ref2$data = _ref2.data,
+	        data = _ref2$data === undefined ? {} : _ref2$data,
+	        _ref2$Type = _ref2.Type,
+	        Type = _ref2$Type === undefined ? null : _ref2$Type;
+
+	    url = pathString(url, data);
+
+	    return call({ url: url, Type: Type, options: {
+	            method: 'get'
+	        } });
+	}
+
+	function post(_ref3) {
+	    var url = _ref3.url,
+	        _ref3$data = _ref3.data,
+	        data = _ref3$data === undefined ? {} : _ref3$data,
+	        _ref3$Type = _ref3.Type,
+	        Type = _ref3$Type === undefined ? null : _ref3$Type;
+
+	    return call({ url: url, Type: Type, options: {
+	            method: 'post',
+	            headers: {
+	                'Content-Type': 'application/json'
+	            },
+	            body: handleBody(data)
+	        } });
+	}
+
+	function del(_ref4) {
+	    var url = _ref4.url,
+	        _ref4$data = _ref4.data,
+	        data = _ref4$data === undefined ? {} : _ref4$data,
+	        _ref4$Type = _ref4.Type,
+	        Type = _ref4$Type === undefined ? null : _ref4$Type;
+
+	    return call({ url: url, Type: Type, options: {
+	            method: 'delete',
+	            headers: {
+	                'Content-Type': 'application/json'
+	            },
+	            body: handleBody(data)
+	        } });
+	}
+
+	function handleBody(data) {
+	    if (data instanceof Blob) {
+	        return data;
+	    }
+
+	    return JSON.stringify(data);
+	}
+
+	var FetchError = exports.FetchError = function (_Error) {
+	    _inherits(FetchError, _Error);
+
+	    function FetchError(code, message, data) {
+	        _classCallCheck(this, FetchError);
+
+	        var _this = _possibleConstructorReturn(this, (FetchError.__proto__ || Object.getPrototypeOf(FetchError)).call(this, message));
+
+	        _this.statusCode = code;
+	        _this.data = data;
+	        return _this;
+	    }
+
+	    return FetchError;
+	}(Error);
+
+/***/ },
+/* 278 */
+/***/ function(module, exports) {
+
+	(function(self) {
+	  'use strict';
+
+	  if (self.fetch) {
+	    return
+	  }
+
+	  var support = {
+	    searchParams: 'URLSearchParams' in self,
+	    iterable: 'Symbol' in self && 'iterator' in Symbol,
+	    blob: 'FileReader' in self && 'Blob' in self && (function() {
+	      try {
+	        new Blob()
+	        return true
+	      } catch(e) {
+	        return false
+	      }
+	    })(),
+	    formData: 'FormData' in self,
+	    arrayBuffer: 'ArrayBuffer' in self
+	  }
+
+	  if (support.arrayBuffer) {
+	    var viewClasses = [
+	      '[object Int8Array]',
+	      '[object Uint8Array]',
+	      '[object Uint8ClampedArray]',
+	      '[object Int16Array]',
+	      '[object Uint16Array]',
+	      '[object Int32Array]',
+	      '[object Uint32Array]',
+	      '[object Float32Array]',
+	      '[object Float64Array]'
+	    ]
+
+	    var isDataView = function(obj) {
+	      return obj && DataView.prototype.isPrototypeOf(obj)
+	    }
+
+	    var isArrayBufferView = ArrayBuffer.isView || function(obj) {
+	      return obj && viewClasses.indexOf(Object.prototype.toString.call(obj)) > -1
+	    }
+	  }
+
+	  function normalizeName(name) {
+	    if (typeof name !== 'string') {
+	      name = String(name)
+	    }
+	    if (/[^a-z0-9\-#$%&'*+.\^_`|~]/i.test(name)) {
+	      throw new TypeError('Invalid character in header field name')
+	    }
+	    return name.toLowerCase()
+	  }
+
+	  function normalizeValue(value) {
+	    if (typeof value !== 'string') {
+	      value = String(value)
+	    }
+	    return value
+	  }
+
+	  // Build a destructive iterator for the value list
+	  function iteratorFor(items) {
+	    var iterator = {
+	      next: function() {
+	        var value = items.shift()
+	        return {done: value === undefined, value: value}
+	      }
+	    }
+
+	    if (support.iterable) {
+	      iterator[Symbol.iterator] = function() {
+	        return iterator
+	      }
+	    }
+
+	    return iterator
+	  }
+
+	  function Headers(headers) {
+	    this.map = {}
+
+	    if (headers instanceof Headers) {
+	      headers.forEach(function(value, name) {
+	        this.append(name, value)
+	      }, this)
+
+	    } else if (headers) {
+	      Object.getOwnPropertyNames(headers).forEach(function(name) {
+	        this.append(name, headers[name])
+	      }, this)
+	    }
+	  }
+
+	  Headers.prototype.append = function(name, value) {
+	    name = normalizeName(name)
+	    value = normalizeValue(value)
+	    var oldValue = this.map[name]
+	    this.map[name] = oldValue ? oldValue+','+value : value
+	  }
+
+	  Headers.prototype['delete'] = function(name) {
+	    delete this.map[normalizeName(name)]
+	  }
+
+	  Headers.prototype.get = function(name) {
+	    name = normalizeName(name)
+	    return this.has(name) ? this.map[name] : null
+	  }
+
+	  Headers.prototype.has = function(name) {
+	    return this.map.hasOwnProperty(normalizeName(name))
+	  }
+
+	  Headers.prototype.set = function(name, value) {
+	    this.map[normalizeName(name)] = normalizeValue(value)
+	  }
+
+	  Headers.prototype.forEach = function(callback, thisArg) {
+	    for (var name in this.map) {
+	      if (this.map.hasOwnProperty(name)) {
+	        callback.call(thisArg, this.map[name], name, this)
+	      }
+	    }
+	  }
+
+	  Headers.prototype.keys = function() {
+	    var items = []
+	    this.forEach(function(value, name) { items.push(name) })
+	    return iteratorFor(items)
+	  }
+
+	  Headers.prototype.values = function() {
+	    var items = []
+	    this.forEach(function(value) { items.push(value) })
+	    return iteratorFor(items)
+	  }
+
+	  Headers.prototype.entries = function() {
+	    var items = []
+	    this.forEach(function(value, name) { items.push([name, value]) })
+	    return iteratorFor(items)
+	  }
+
+	  if (support.iterable) {
+	    Headers.prototype[Symbol.iterator] = Headers.prototype.entries
+	  }
+
+	  function consumed(body) {
+	    if (body.bodyUsed) {
+	      return Promise.reject(new TypeError('Already read'))
+	    }
+	    body.bodyUsed = true
+	  }
+
+	  function fileReaderReady(reader) {
+	    return new Promise(function(resolve, reject) {
+	      reader.onload = function() {
+	        resolve(reader.result)
+	      }
+	      reader.onerror = function() {
+	        reject(reader.error)
+	      }
+	    })
+	  }
+
+	  function readBlobAsArrayBuffer(blob) {
+	    var reader = new FileReader()
+	    var promise = fileReaderReady(reader)
+	    reader.readAsArrayBuffer(blob)
+	    return promise
+	  }
+
+	  function readBlobAsText(blob) {
+	    var reader = new FileReader()
+	    var promise = fileReaderReady(reader)
+	    reader.readAsText(blob)
+	    return promise
+	  }
+
+	  function readArrayBufferAsText(buf) {
+	    var view = new Uint8Array(buf)
+	    var chars = new Array(view.length)
+
+	    for (var i = 0; i < view.length; i++) {
+	      chars[i] = String.fromCharCode(view[i])
+	    }
+	    return chars.join('')
+	  }
+
+	  function bufferClone(buf) {
+	    if (buf.slice) {
+	      return buf.slice(0)
+	    } else {
+	      var view = new Uint8Array(buf.byteLength)
+	      view.set(new Uint8Array(buf))
+	      return view.buffer
+	    }
+	  }
+
+	  function Body() {
+	    this.bodyUsed = false
+
+	    this._initBody = function(body) {
+	      this._bodyInit = body
+	      if (!body) {
+	        this._bodyText = ''
+	      } else if (typeof body === 'string') {
+	        this._bodyText = body
+	      } else if (support.blob && Blob.prototype.isPrototypeOf(body)) {
+	        this._bodyBlob = body
+	      } else if (support.formData && FormData.prototype.isPrototypeOf(body)) {
+	        this._bodyFormData = body
+	      } else if (support.searchParams && URLSearchParams.prototype.isPrototypeOf(body)) {
+	        this._bodyText = body.toString()
+	      } else if (support.arrayBuffer && support.blob && isDataView(body)) {
+	        this._bodyArrayBuffer = bufferClone(body.buffer)
+	        // IE 10-11 can't handle a DataView body.
+	        this._bodyInit = new Blob([this._bodyArrayBuffer])
+	      } else if (support.arrayBuffer && (ArrayBuffer.prototype.isPrototypeOf(body) || isArrayBufferView(body))) {
+	        this._bodyArrayBuffer = bufferClone(body)
+	      } else {
+	        throw new Error('unsupported BodyInit type')
+	      }
+
+	      if (!this.headers.get('content-type')) {
+	        if (typeof body === 'string') {
+	          this.headers.set('content-type', 'text/plain;charset=UTF-8')
+	        } else if (this._bodyBlob && this._bodyBlob.type) {
+	          this.headers.set('content-type', this._bodyBlob.type)
+	        } else if (support.searchParams && URLSearchParams.prototype.isPrototypeOf(body)) {
+	          this.headers.set('content-type', 'application/x-www-form-urlencoded;charset=UTF-8')
+	        }
+	      }
+	    }
+
+	    if (support.blob) {
+	      this.blob = function() {
+	        var rejected = consumed(this)
+	        if (rejected) {
+	          return rejected
+	        }
+
+	        if (this._bodyBlob) {
+	          return Promise.resolve(this._bodyBlob)
+	        } else if (this._bodyArrayBuffer) {
+	          return Promise.resolve(new Blob([this._bodyArrayBuffer]))
+	        } else if (this._bodyFormData) {
+	          throw new Error('could not read FormData body as blob')
+	        } else {
+	          return Promise.resolve(new Blob([this._bodyText]))
+	        }
+	      }
+
+	      this.arrayBuffer = function() {
+	        if (this._bodyArrayBuffer) {
+	          return consumed(this) || Promise.resolve(this._bodyArrayBuffer)
+	        } else {
+	          return this.blob().then(readBlobAsArrayBuffer)
+	        }
+	      }
+	    }
+
+	    this.text = function() {
+	      var rejected = consumed(this)
+	      if (rejected) {
+	        return rejected
+	      }
+
+	      if (this._bodyBlob) {
+	        return readBlobAsText(this._bodyBlob)
+	      } else if (this._bodyArrayBuffer) {
+	        return Promise.resolve(readArrayBufferAsText(this._bodyArrayBuffer))
+	      } else if (this._bodyFormData) {
+	        throw new Error('could not read FormData body as text')
+	      } else {
+	        return Promise.resolve(this._bodyText)
+	      }
+	    }
+
+	    if (support.formData) {
+	      this.formData = function() {
+	        return this.text().then(decode)
+	      }
+	    }
+
+	    this.json = function() {
+	      return this.text().then(JSON.parse)
+	    }
+
+	    return this
+	  }
+
+	  // HTTP methods whose capitalization should be normalized
+	  var methods = ['DELETE', 'GET', 'HEAD', 'OPTIONS', 'POST', 'PUT']
+
+	  function normalizeMethod(method) {
+	    var upcased = method.toUpperCase()
+	    return (methods.indexOf(upcased) > -1) ? upcased : method
+	  }
+
+	  function Request(input, options) {
+	    options = options || {}
+	    var body = options.body
+
+	    if (typeof input === 'string') {
+	      this.url = input
+	    } else {
+	      if (input.bodyUsed) {
+	        throw new TypeError('Already read')
+	      }
+	      this.url = input.url
+	      this.credentials = input.credentials
+	      if (!options.headers) {
+	        this.headers = new Headers(input.headers)
+	      }
+	      this.method = input.method
+	      this.mode = input.mode
+	      if (!body && input._bodyInit != null) {
+	        body = input._bodyInit
+	        input.bodyUsed = true
+	      }
+	    }
+
+	    this.credentials = options.credentials || this.credentials || 'omit'
+	    if (options.headers || !this.headers) {
+	      this.headers = new Headers(options.headers)
+	    }
+	    this.method = normalizeMethod(options.method || this.method || 'GET')
+	    this.mode = options.mode || this.mode || null
+	    this.referrer = null
+
+	    if ((this.method === 'GET' || this.method === 'HEAD') && body) {
+	      throw new TypeError('Body not allowed for GET or HEAD requests')
+	    }
+	    this._initBody(body)
+	  }
+
+	  Request.prototype.clone = function() {
+	    return new Request(this, { body: this._bodyInit })
+	  }
+
+	  function decode(body) {
+	    var form = new FormData()
+	    body.trim().split('&').forEach(function(bytes) {
+	      if (bytes) {
+	        var split = bytes.split('=')
+	        var name = split.shift().replace(/\+/g, ' ')
+	        var value = split.join('=').replace(/\+/g, ' ')
+	        form.append(decodeURIComponent(name), decodeURIComponent(value))
+	      }
+	    })
+	    return form
+	  }
+
+	  function parseHeaders(rawHeaders) {
+	    var headers = new Headers()
+	    rawHeaders.split('\r\n').forEach(function(line) {
+	      var parts = line.split(':')
+	      var key = parts.shift().trim()
+	      if (key) {
+	        var value = parts.join(':').trim()
+	        headers.append(key, value)
+	      }
+	    })
+	    return headers
+	  }
+
+	  Body.call(Request.prototype)
+
+	  function Response(bodyInit, options) {
+	    if (!options) {
+	      options = {}
+	    }
+
+	    this.type = 'default'
+	    this.status = 'status' in options ? options.status : 200
+	    this.ok = this.status >= 200 && this.status < 300
+	    this.statusText = 'statusText' in options ? options.statusText : 'OK'
+	    this.headers = new Headers(options.headers)
+	    this.url = options.url || ''
+	    this._initBody(bodyInit)
+	  }
+
+	  Body.call(Response.prototype)
+
+	  Response.prototype.clone = function() {
+	    return new Response(this._bodyInit, {
+	      status: this.status,
+	      statusText: this.statusText,
+	      headers: new Headers(this.headers),
+	      url: this.url
+	    })
+	  }
+
+	  Response.error = function() {
+	    var response = new Response(null, {status: 0, statusText: ''})
+	    response.type = 'error'
+	    return response
+	  }
+
+	  var redirectStatuses = [301, 302, 303, 307, 308]
+
+	  Response.redirect = function(url, status) {
+	    if (redirectStatuses.indexOf(status) === -1) {
+	      throw new RangeError('Invalid status code')
+	    }
+
+	    return new Response(null, {status: status, headers: {location: url}})
+	  }
+
+	  self.Headers = Headers
+	  self.Request = Request
+	  self.Response = Response
+
+	  self.fetch = function(input, init) {
+	    return new Promise(function(resolve, reject) {
+	      var request = new Request(input, init)
+	      var xhr = new XMLHttpRequest()
+
+	      xhr.onload = function() {
+	        var options = {
+	          status: xhr.status,
+	          statusText: xhr.statusText,
+	          headers: parseHeaders(xhr.getAllResponseHeaders() || '')
+	        }
+	        options.url = 'responseURL' in xhr ? xhr.responseURL : options.headers.get('X-Request-URL')
+	        var body = 'response' in xhr ? xhr.response : xhr.responseText
+	        resolve(new Response(body, options))
+	      }
+
+	      xhr.onerror = function() {
+	        reject(new TypeError('Network request failed'))
+	      }
+
+	      xhr.ontimeout = function() {
+	        reject(new TypeError('Network request failed'))
+	      }
+
+	      xhr.open(request.method, request.url, true)
+
+	      if (request.credentials === 'include') {
+	        xhr.withCredentials = true
+	      }
+
+	      if ('responseType' in xhr && support.blob) {
+	        xhr.responseType = 'blob'
+	      }
+
+	      request.headers.forEach(function(value, name) {
+	        xhr.setRequestHeader(name, value)
+	      })
+
+	      xhr.send(typeof request._bodyInit === 'undefined' ? null : request._bodyInit)
+	    })
+	  }
+	  self.fetch.polyfill = true
+	})(typeof self !== 'undefined' ? self : this);
+
 
 /***/ }
 /******/ ]);

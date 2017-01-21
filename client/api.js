@@ -1,4 +1,4 @@
-import { get, del, post } from './fetch';
+import { get, del, post } from './util/fetch';
 
 export default class API {
     constructor(baseURL) {
@@ -6,7 +6,6 @@ export default class API {
     }
 
     login(email, password) {
-      console.log("api login");
         return post({
             url: '/api/auth',
             // data: { email, password },
@@ -24,5 +23,11 @@ export default class API {
         return get({
             url: '/api/users/' + userID,
         });
+    }
+
+    getTweets() {
+      return get({
+          url: '/api/tweets/',
+      });
     }
 }

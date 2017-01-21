@@ -36,6 +36,9 @@ func main() {
 	s.TwitterClient = twitterClient
 
 	database := os.Getenv("WW_DB")
+	if database == "" {
+		database = "workingwheatleys"
+	}
 	dbPort := os.Getenv("WW_DB_PORT")
 	if dbPort == "" {
 		dbPort = "5432"
@@ -71,6 +74,10 @@ func main() {
 		fmt.Printf(err.Error())
 	}
 	fmt.Printf("return from postgres%#+v\n", a)
+	err = db.CreateUsersTable()
+	if err != nil {
+		fmt.Printf(err.Error())
+	}
 
 	port := os.Getenv("PORT")
 	if port == "" {

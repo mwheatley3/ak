@@ -19,3 +19,8 @@ type User struct {
 	// UpdatedAt      time.Time  `json:"updated_at"`
 	// DeletedAt      *time.Time `json:"-"`
 }
+
+// Count is a count of the number of rows
+type Count struct {
+	Count int `json:"count"`
+}

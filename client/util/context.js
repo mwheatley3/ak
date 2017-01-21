@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
-import hoist from 'hoist-non-react-statics';
 
-const { element, any } = PropTypes;
+const { any, element } = PropTypes;
 
 export function injector(ctxt) {
     const ctxtTypes = {};
@@ -27,7 +26,9 @@ export function injector(ctxt) {
     };
 }
 
+// provider creates a function that can decorate react components to provide context
 export function provider(...keys) {
+  // transform inputs into an object that represents the context
     const ctxtTypes = keys.reduce((obj, k) => {
         obj[k] = any.isRequired;
         return obj;
@@ -36,15 +37,17 @@ export function provider(...keys) {
     return function(Comp) {
         class ContextProvider extends Component {
             static displayName = 'ContextProvider(' + (Comp.displayName || Comp.name) + ')';
+            // use the default naming convention to place context on component
             static contextTypes = ctxtTypes;
 
+            // combine context and props into props so that the context can be accessed via props
             render() {
                 const props = Object.assign({}, this.props, this.context);
                 return <Comp { ...props } />;
             }
         }
 
-        hoist(ContextProvider, Comp);
+        // hoist(ContextProvider, Comp);
 
         return ContextProvider;
     };

@@ -5,11 +5,11 @@ import Notification from './common/notification';
 import Form, { TextInput, PasswordInput, Submit } from './common/form';
 
 import style from '../util/style';
-import API from '../util/api';
 
-
+import { withRouter } from 'react-router';
 const { object } = PropTypes;
 
+@withRouter
 @style(css)
 export default class Login extends Component {
     static propTypes = {
@@ -17,13 +17,13 @@ export default class Login extends Component {
         router: object.isRequired,
     };
 
+    static contextTypes = {
+        store: object,
+    };
+
     onSubmit = e => {
+      const { store } = this.context;
         e.preventDefault();
-
-        const api = new API();
-
-        // const { store } = this.props;
-
         // if (store.auth.user.loading) {
         //     return;
         // }
@@ -31,7 +31,8 @@ export default class Login extends Component {
         const { email, password } = this.refs;
         console.log("email", email);
         console.log("password", password);
-        api.login(email.value, password.value);
+        store.api.login(email.value, password.value);
+        this.checkAuth();
     }
 
     // componentWillMount() {
@@ -42,14 +43,15 @@ export default class Login extends Component {
     //     this.checkAuth();
     // }
     //
-    // checkAuth() {
-    //     const { store, router, location } = this.props;
-    //
-    //     if (store.auth.loggedIn) {
-    //         const next = location.query.next || '/';
-    //         router.push(next);
-    //     }
-    // }
+    checkAuth() {
+        const { router, location } = this.props;
+        const { store } = this.context;
+        // debugger;
+        if (store.auth.loggedIn) {
+            const next = location.query.next || '/';
+            router.push(next);
+        }
+    }
 
     render() {
         // const { store } = this.props;

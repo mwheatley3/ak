@@ -1,16 +1,23 @@
 var path = require('path');
 var autoprefixer = require('autoprefixer');
 var postcssnested = require('postcss-nested');
+var base = __dirname;
 
 module.exports = {
-  entry: './index.js',
+  __publicDir: path.join(base, 'public'),
+
   output: {
-    path: path.join(__dirname, 'public'),
-    filename: 'bundle.js',
+      path: path.join(base, 'public'),
+      publicPath: '/public/',
+      filename: '[name].js',
   },
+
+  entry: './index.js',
+
   postcss: function() {
         return [autoprefixer, postcssnested];
     },
+
   module: {
     preLoaders: [
       { test: /\.js?$/, loader: 'eslint-loader', exclude: /node_modules/ },
@@ -29,5 +36,12 @@ module.exports = {
       { test: /\.jpg$/, loader: 'url-loader?limit=10000' },
       { test: /\.gif$/, loader: 'url-loader?limit=10000' },
     ],
+  },
+
+  resolve: {
+    extensions: ['', '.webpack.js', '.web.js', '.js'],
+    alias: {
+        js: path.join(base, 'js'),
+    },
   },
 };
