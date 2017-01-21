@@ -41,7 +41,7 @@ module.exports = {
   resolve: {
     extensions: ['', '.webpack.js', '.web.js', '.js'],
     alias: {
-        js: path.join(base, 'js'),
+        client: path.join(base, 'client'),
     },
   },
 };

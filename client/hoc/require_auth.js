@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { withRouter } from 'react-router';
-import { withStore } from '../store';
+import { withStore } from 'client/store';
 
 const { object, node } = PropTypes;
 

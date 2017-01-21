@@ -20,7 +20,7 @@ func main() {
 		HTTPServer: http.Server{},
 		Router:     http.NewServeMux(),
 	}
-	fs := http.StripPrefix("/public/", http.FileServer(http.Dir("/public")))
+	fs := http.StripPrefix("/public/", http.FileServer(http.Dir("public")))
 	s.Router.Handle("/public/", fs)
 	s.Router.HandleFunc("/", react)
 	s.Router.HandleFunc("/hello", hello)
@@ -106,7 +106,7 @@ func react(res http.ResponseWriter, req *http.Request) {
 	// if err := indexTmpl.Execute(res, ""); err != nil {
 	// 	fmt.Print(err.Error())
 	// }
-	http.ServeFile(res, req, "../../index.html")
+	http.ServeFile(res, req, "./index.html")
 }
 
 // var indexTmpl = template.Must(template.New("").Parse(`
