@@ -7,46 +7,42 @@ import Form, { TextInput, PasswordInput, Submit } from './common/form';
 import style from '../util/style';
 
 import { withRouter } from 'react-router';
+import { withStore } from 'client/store';
 const { object } = PropTypes;
+
 
 @withRouter
 @style(css)
+@withStore
 export default class Login extends Component {
     static propTypes = {
         location: object.isRequired,
         router: object.isRequired,
-    };
-
-    static contextTypes = {
-        store: object,
+        store: object.isRequired,
     };
 
     onSubmit = e => {
-      const { store } = this.context;
+      const { store } = this.props;
         e.preventDefault();
-        // if (store.auth.user.loading) {
-        //     return;
-        // }
+        if (store.auth.user.loading) {
+            return;
+        }
 
         const { email, password } = this.refs;
-        console.log("email", email);
-        console.log("password", password);
-        store.api.login(email.value, password.value);
+        store.auth.login(email.value, password.value);
         this.checkAuth();
     }
 
-    // componentWillMount() {
-    //     this.checkAuth();
-    // }
-    //
-    // componentDidUpdate() {
-    //     this.checkAuth();
-    // }
-    //
+    componentWillMount() {
+        this.checkAuth();
+    }
+
+    componentDidUpdate() {
+        this.checkAuth();
+    }
+
     checkAuth() {
-        const { router, location } = this.props;
-        const { store } = this.context;
-        // debugger;
+        const { router, location, store } = this.props;
         if (store.auth.loggedIn) {
             const next = location.query.next || '/';
             router.push(next);
@@ -54,18 +50,18 @@ export default class Login extends Component {
     }
 
     render() {
-        // const { store } = this.props;
+        const { store } = this.props;
 
-        // if (store.auth.loggedIn) {
-        //     return null;
-        // }
+        if (store.auth.loggedIn) {
+            return null;
+        }
 
-        // const isUnauthorized = store.auth.user.error && store.auth.user.error.statusCode === 401 || false;
-        // const loading = store.auth.user.loading;
+        const isUnauthorized = store.auth.user.error && store.auth.user.error.statusCode === 401 || false;
+        const loading = store.auth.user.loading;
 
         return (
             <div className="login">
-                <Notification open={ false } type="danger">Invalid email or password</Notification>
+                <Notification open={ isUnauthorized && !loading } type="danger">Invalid email or password</Notification>
                 <Form className="box" onSubmit={ this.onSubmit }>
                     <h1 className="title">Login</h1>
                     <TextInput ref="email" placeholder="Email" />

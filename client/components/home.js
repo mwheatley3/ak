@@ -8,7 +8,6 @@ export default class Home extends Component {
         return (
           <div>
               <div>Home</div>
-              <img src="http://s3.amazonaws.com/workingwheatleys/public/keri_desk.jpg"/>
           </div>
 
         );

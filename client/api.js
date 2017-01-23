@@ -1,4 +1,5 @@
 import { get, del, post } from './util/fetch';
+import { User } from 'client/models';
 
 export default class API {
     constructor(baseURL) {
@@ -8,9 +9,9 @@ export default class API {
     login(email, password) {
         return post({
             url: '/api/auth',
-            // data: { email, password },
-            // Type: User.fromJSON,
-        }).then(val => console.log(val + "something"));
+            data: { email, password },
+            Type: User.fromJSON,
+        }).then( data => console.log("login response", data));
     }
 
     logout() {
@@ -22,6 +23,7 @@ export default class API {
     getUser(userID = 'me') {
         return get({
             url: '/api/users/' + userID,
+            Type: User.fromJSON,
         });
     }
 

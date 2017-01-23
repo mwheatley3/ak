@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Form, { TextInput } from './common/form';
 
-export default class Coffee extends Component {
+export default class Sentiments extends Component {
     static propTypes = {
     };
 
@@ -13,7 +13,7 @@ export default class Coffee extends Component {
 
     render() {
         return (
-            <div>Coffee
+            <div>Sentiments
               <Form onSubmit={ this.onSubmit }>
                 twitter handle: <TextInput />
               </Form>

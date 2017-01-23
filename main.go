@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/Sirupsen/logrus"
+	"github.com/julienschmidt/httprouter"
 	// needed to drive connection to DB
 	_ "github.com/jackc/pgx/stdlib"
 	"github.com/mwheatley3/ak/server/db"
@@ -18,15 +20,19 @@ import (
 func main() {
 	s := web.Server{
 		HTTPServer: http.Server{},
-		Router:     http.NewServeMux(),
+		Router:     httprouter.New(),
 	}
-	fs := http.StripPrefix("/public/", http.FileServer(http.Dir("public")))
-	s.Router.Handle("/public/", fs)
-	s.Router.HandleFunc("/", react)
-	s.Router.HandleFunc("/hello", hello)
-	s.Router.HandleFunc("/api/auth", auth)
-	s.Router.HandleFunc("/tweet", s.WithTwitterClient(tweets))
-	// s.Router.HandleFunc("/access", twitterAccess)
+
+	s.Router.GET("/", react)
+	s.Router.GET("/login", react)
+	s.Router.GET("/sentiments", react)
+	s.Router.GET("/keri", react)
+	s.Router.GET("/hello", hello)
+	s.Router.GET("/public/*splat", fsHandler("/public/", "public"))
+	s.Router.GET("/api/users/:userID", s.GetUser)
+	s.Router.GET("/api/auth", auth)
+	s.Router.GET("/tweet", s.WithTwitterClient(tweets))
+	// s.Router.GET("/access", twitterAccess)
 
 	twitterKey := os.Getenv("TWITTER_KEY")
 	twitterSecret := os.Getenv("TWITTER_SECRET")
@@ -85,23 +91,29 @@ func main() {
 	}
 	fmt.Println("listening... port" + port)
 	s.HTTPServer.Addr = ":" + port
+
 	s.HTTPServer.Handler = s.Router
 	err = s.HTTPServer.ListenAndServe()
 	if err != nil {
 		panic(err)
 	}
+
 }
 
-func hello(res http.ResponseWriter, req *http.Request) {
-	fmt.Fprintln(res, "hello, world")
-}
-
-func auth(res http.ResponseWriter, req *http.Request) {
-	fmt.Fprintln(res, "AUTH API")
+func auth(res http.ResponseWriter, req *http.Request, _ httprouter.Params) {
+	// fmt.Fprintln(res, "AUTH API")
+	resp := web.JSON(nil, res)
+	u := web.User{}
+	resp.Success(u)
+	// resp.Error(errors.New("No user found"), http.StatusNotFound)
 	println("***************************")
 }
 
-func react(res http.ResponseWriter, req *http.Request) {
+func hello(res http.ResponseWriter, req *http.Request, _ httprouter.Params) {
+	fmt.Fprintln(res, "hello, world")
+}
+
+func react(res http.ResponseWriter, req *http.Request, _ httprouter.Params) {
 	println("react")
 	// if err := indexTmpl.Execute(res, ""); err != nil {
 	// 	fmt.Print(err.Error())
@@ -121,7 +133,7 @@ func react(res http.ResponseWriter, req *http.Request) {
 // </html>
 // `))
 
-func tweets(res http.ResponseWriter, req *http.Request) {
+func tweets(res http.ResponseWriter, req *http.Request, _ httprouter.Params) {
 	// is storing the twitter client on context correct?
 	twitterClient := req.Context().Value("twitterClient").(*twitter.Client)
 	if twitterClient.AccessToken == "" {
@@ -149,4 +161,12 @@ func tweets(res http.ResponseWriter, req *http.Request) {
 
 	// twitterClient
 	twitter.Feed()
+}
+
+func fsHandler(prefix, path string) httprouter.Handle {
+	fs := http.StripPrefix(prefix, http.FileServer(http.Dir(path)))
+
+	return httprouter.Handle(func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+		fs.ServeHTTP(w, r)
+	})
 }

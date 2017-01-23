@@ -7,10 +7,9 @@ import routes from './client/routes';
 import Store from './client/store';
 import API from './client/api';
 import { injector } from './client/util/context';
-const api = new API();
+const api = new API("localhost:8081/api");
 const store = new Store(api);
 store.init();
-
 
 const App = injector( { store: store } );
 
